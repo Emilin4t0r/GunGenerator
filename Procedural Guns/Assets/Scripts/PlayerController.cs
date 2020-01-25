@@ -5,36 +5,34 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-    public int woodAmt;
-    public bool treeTargeted;
-    public bool treeWasHit;
-    public bool inInventory;
+    public bool playerShot;
+    //public bool inInventory;
     public GameObject crosshairs;
-    public GameObject inventory;
-    public GameObject mainCamera;
-
+    //public GameObject inventory;
+    //public GameObject mainCamera;
+    public Animator cameraAnim;
+    
     private void Start() {
     }
 
-    private void Update() {
+    private void Update() {       
 
-       /* //Tree detecting and hitting
-        RaycastHit hit;
-        Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(transform.position, fwd, out hit, 2) && hit.transform.tag == "Tree" && axe.activeSelf == true) {
-            Debug.DrawRay(transform.position, fwd, Color.red, 10);
-            treeTargeted = true;
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) {
+            cameraAnim.SetBool("Moving", true);
         }
         else {
-            treeTargeted = false;
-
+            cameraAnim.SetBool("Moving", false);
+        }
+        if (Input.GetKey(KeyCode.Space)) {
+            cameraAnim.SetBool("Moving", false);
+        }
+        /*
         if (Input.GetKeyDown(KeyCode.E) && inInventory == false) {
             inInventory = true;
         }
         else if (Input.GetKeyDown(KeyCode.E) && inInventory == true) {
             inInventory = false;
         }
-
         if (inInventory == true) {
             inventory.SetActive(true);
             mainCamera.GetComponent<PlayerLook>().cursorLocked = false;

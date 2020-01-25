@@ -13,14 +13,11 @@ public class PlayerMove : MonoBehaviour {
     private CharacterController charController;
     private Camera camera;
 
-    //public Animator anim;
-
     public AnimationCurve jumpFalloff;
     public float jumpMultiplier;
     public KeyCode jumpKey;
 
     public bool isJumping;
-
 
     private void Awake() {
         charController = GetComponent<CharacterController>();
