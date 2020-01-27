@@ -68,7 +68,7 @@ public class PlayerLook : MonoBehaviour {
                     if (hit.transform.tag == "Player") {
                         playerShot = true;
                         Debug.DrawRay(transform.position, fwd * 1000f, Color.red, 2);
-                        DrawHitLine();
+                        DrawLine();
                         hitDistance = hit.distance;
                     }
                 }
@@ -81,7 +81,7 @@ public class PlayerLook : MonoBehaviour {
                     if (hit.transform.tag == "Player") {
                         playerShot = true;
                         Debug.DrawRay(transform.position, fwd * 1000f, Color.red, 2);
-                        DrawHitLine();
+                        DrawLine();
                         hitDistance = hit.distance;
                     }
                 }
@@ -119,19 +119,14 @@ public class PlayerLook : MonoBehaviour {
         eulerRotation.x = value;
         transform.eulerAngles = eulerRotation;
     }
-    void DrawLine() {        
-        linePosition[0] = gunHolder.transform.position;
-        linePosition[1] = transform.forward * 20 + transform.position;
+    void DrawLine() {
+        Vector3 deviation3D = Random.insideUnitCircle * maxDeviation;
+        Quaternion rot = Quaternion.LookRotation(Vector3.forward * range + deviation3D);    //*Accuracy calculations
+        Vector3 fwd = transform.rotation * rot * Vector3.forward;
+        linePosition[0] = gunGenerator.GetComponent<GunGenerator>().barrel.transform.Find("BulletExit").transform.position; //BulletExit Gameobject of the barrel
+        linePosition[1] = fwd * 100 + transform.position;
         lineRenderer.SetPositions(linePosition);
         GameObject lineDest = Instantiate(lineDestroyer, transform.position, transform.rotation) as GameObject;
         Destroy(lineDest, 0.5f);
     }
-    void DrawHitLine() {
-        linePosition[0] = gunHolder.transform.position;
-        linePosition[1] = hit.transform.position;
-        lineRenderer.SetPositions(linePosition);
-        GameObject lineDest = Instantiate(lineDestroyer, transform.position, transform.rotation) as GameObject;
-        Destroy(lineDest, 0.5f);
-    }
-
 }

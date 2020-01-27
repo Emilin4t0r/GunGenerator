@@ -7,11 +7,6 @@ public class TestDummy : MonoBehaviour
 
     public float health = 100;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (health <= 0)
