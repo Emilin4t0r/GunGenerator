@@ -31,6 +31,7 @@ public class GunGenerator : MonoBehaviour {
     private GameObject magasine;
     private GameObject sight;
     private GameObject attachment;
+    private GameObject currentGun;
 
     public bool fullAuto;
 
@@ -38,11 +39,27 @@ public class GunGenerator : MonoBehaviour {
     public Text ammoText;
 	public string gunNameText;
 
+    public AudioSource[] gunSounds = new AudioSource[4];
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !gunHolder.GetComponent<GunHolderController>().reloading) {
             GenerateGun();
         }
         ammoText.text = ammo.ToString();
+
+        //Linking correct gun sound to gunHolder according to receiver type
+        if (GameObject.Find("Receiver(Clone)") != null) {
+            gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[0];
+        }
+        else if (GameObject.Find("Receiver 1(Clone)") != null) {
+            gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[1];
+        }
+        else if (GameObject.Find("Receiver 2(Clone)") != null) {
+            gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[2];
+        }
+        else if (GameObject.Find("Receiver 3(Clone)") != null) {
+            gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[3];
+        }
     }
 
     public void GenerateGun() {
@@ -268,6 +285,8 @@ public class GunGenerator : MonoBehaviour {
         GameObject.Find("CameraRotator").GetComponent<CameraRotator>().counter = 0;
         GameObject.Find("CameraRotator").transform.rotation = Quaternion.Euler(0, 50, 0);
         */
+
+        //Copying current gun to show on UI
     }
 
     //FUNCTION FOR MODIFYING ATTRIBUTES (CHANGE ATTRIBUTES)

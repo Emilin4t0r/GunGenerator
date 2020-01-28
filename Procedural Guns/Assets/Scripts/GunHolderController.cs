@@ -30,6 +30,10 @@ public class GunHolderController : MonoBehaviour
     public float maxCounter3 = 1;
     public float cameraShake;
 
+    public AudioSource gunSound;
+    public AudioSource sfxReload;
+    public bool sfxReloadisPlaying;
+
     void Start()
     {
         //TODO:
@@ -49,31 +53,38 @@ public class GunHolderController : MonoBehaviour
         if (currentAmmo == 0 && transform.childCount > 0) {
             reloading = true;        
         }
-        if (Input.GetKey(KeyCode.R) && currentAmmo < maxAmmo) {
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < maxAmmo) {            
             reloading = true;
         }
         if (reloading) {
+            if (!sfxReloadisPlaying) {
+                sfxReload.Play();
+                sfxReloadisPlaying = true;
+            }
             anim.SetBool("Reloading", true);
             if (counter3 >= maxCounter3) {
                 anim.SetBool("Reloading", false);
                 ammoCounter = 0;
                 counter3 = 0;
-                reloading = false;                
+                reloading = false;
+                sfxReloadisPlaying = false;
             } else {
                 counter3 += Time.deltaTime;                
             }
         }
 
-        damage += (range - playerCamera.GetComponent<PlayerLook>().hitDistance); //Calculate damage modifier by subtracting bullet distance from range
-        damage = damage / 2;
-        if (damage < 1) 
-            damage = 1;        
+        if (damage > 50)
+            damage = damage / 2;        
+        damage += (range - playerCamera.GetComponent<PlayerLook>().hitDistance); //Calculate damage modifier by subtracting bullet distance from range 
+        if (damage < 5)
+            damage = 5;
 
         if (counter >= maxCounter) {
             if (gunGenerator.GetComponent<GunGenerator>().fullAuto == false) { //Semi-Auto
                 if (Input.GetKeyDown(KeyCode.Mouse0) && !reloading) {
                     anim.SetBool("Shoot", true);
                     anim.SetTrigger("Shooty");
+                    gunSound.Play();
                     readyToFire = true;
                     ammoCounter++;
                     counter = 0;
@@ -84,6 +95,7 @@ public class GunHolderController : MonoBehaviour
                 if (Input.GetKey(KeyCode.Mouse0) && !reloading) {
                     anim.SetBool("Shoot", true);
                     anim.SetTrigger("Shooty");
+                    gunSound.Play();
                     readyToFire = true;
                     ammoCounter++;
                     counter = 0;
