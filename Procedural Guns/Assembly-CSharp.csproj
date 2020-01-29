@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\PlayerMove.cs" />
     <Compile Include="Assets\Scripts\SliderController.cs" />
     <Compile Include="Assets\Scripts\TestDummy.cs" />
+    <Compile Include="Assets\UiGunImage.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Users/Käyttäjä/Documents/GunGenerator/Procedural Guns/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

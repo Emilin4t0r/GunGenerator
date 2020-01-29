@@ -9,6 +9,7 @@ public class PlayerLook : MonoBehaviour {
     public bool cursorLocked;
     public GameObject gunHolder;
     public GameObject gunGenerator;
+    public GameObject player;
     private RaycastHit hit;    
 
     private float xAxisClamp;
@@ -42,10 +43,16 @@ public class PlayerLook : MonoBehaviour {
             maxDeviation = 0.8f;
         }
 
-        CameraRotation();
-        LockCursor();
+        if (player.GetComponent<PlayerController>().moving) {
+            range = 15;
+        } else {
+            range = 20;
+        }
 
-        if (!GameObject.Find("LineDestroyer(Clone)")) {
+        CameraRotation();
+        LockCursor();        
+
+        if (lineDestroyer != null) {
             linePosition[0] = transform.position;
             linePosition[1] = transform.position;
             lineRenderer.SetPositions(linePosition);
@@ -57,31 +64,29 @@ public class PlayerLook : MonoBehaviour {
         }        
 
         Vector3 deviation3D = Random.insideUnitCircle * maxDeviation;
-        Quaternion rot = Quaternion.LookRotation(Vector3.forward * range + deviation3D);    //*Accuracy calculations
+        Quaternion rot = Quaternion.LookRotation(Vector3.forward * range + deviation3D);    //Accuracy calculations
         Vector3 fwd = transform.rotation * rot * Vector3.forward;
 
         if (Physics.Raycast(transform.position, fwd, out hit, 500)) {
             Debug.DrawRay(transform.position, fwd * 1000f, Color.green, 2);
-            if (gunGenerator.GetComponent<GunGenerator>().fullAuto == false) {  //SEMI-AUTO
-                if (Input.GetKeyDown(KeyCode.Mouse0) && gunHolder.GetComponent<GunHolderController>().readyToFire) {
+            if (gunGenerator.GetComponent<GunGenerator>().fullAuto == false) {  //Semi-auto
+                if (Input.GetKeyDown(KeyCode.Mouse0) && gunHolder.GetComponent<GunHolderController>().readyToFire) {                    
                     DrawLine();
                     if (hit.transform.tag == "Player") {
                         playerShot = true;
                         Debug.DrawRay(transform.position, fwd * 1000f, Color.red, 2);
-                        DrawLine();
                         hitDistance = hit.distance;
-                    }
+                    }                    
                 }
                 else {
                     playerShot = false;
                 }
-            } else {                                                           
-                if (Input.GetKey(KeyCode.Mouse0) && gunHolder.GetComponent<GunHolderController>().readyToFire) {     //FULL-AUTO
+            } else {
+                if (Input.GetKey(KeyCode.Mouse0) && gunHolder.GetComponent<GunHolderController>().readyToFire) {    //Full-auto
                     DrawLine();
                     if (hit.transform.tag == "Player") {
                         playerShot = true;
                         Debug.DrawRay(transform.position, fwd * 1000f, Color.red, 2);
-                        DrawLine();
                         hitDistance = hit.distance;
                     }
                 }
@@ -121,12 +126,12 @@ public class PlayerLook : MonoBehaviour {
     }
     void DrawLine() {
         Vector3 deviation3D = Random.insideUnitCircle * maxDeviation;
-        Quaternion rot = Quaternion.LookRotation(Vector3.forward * range + deviation3D);    //*Accuracy calculations
+        Quaternion rot = Quaternion.LookRotation(Vector3.forward * range + deviation3D);    //Accuracy calculations
         Vector3 fwd = transform.rotation * rot * Vector3.forward;
         linePosition[0] = gunGenerator.GetComponent<GunGenerator>().barrel.transform.Find("BulletExit").transform.position; //BulletExit Gameobject of the barrel
         linePosition[1] = fwd * 100 + transform.position;
         lineRenderer.SetPositions(linePosition);
         GameObject lineDest = Instantiate(lineDestroyer, transform.position, transform.rotation) as GameObject;
-        Destroy(lineDest, 0.5f);
+        Destroy(lineDest);
     }
 }

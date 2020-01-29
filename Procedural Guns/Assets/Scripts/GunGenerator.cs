@@ -41,40 +41,37 @@ public class GunGenerator : MonoBehaviour {
 
     public AudioSource[] gunSounds = new AudioSource[4];
 
+    private void Start() {
+        GenerateGun();        
+    }
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !gunHolder.GetComponent<GunHolderController>().reloading) {
-            GenerateGun();
+            GenerateGun();            
         }
-        ammoText.text = ammo.ToString();
+        ammoText.text = ammo.ToString();    
+        currentGun = gunHolder.transform.GetChild(0).gameObject;//Assigning current gun instance to currentGun variable 
+
 
         //Linking correct gun sound to gunHolder according to receiver type
-        if (GameObject.Find("Receiver(Clone)") != null) {
+        if (gunHolder.transform.GetChild(0).name == ("Receiver(Clone)")) {
             gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[0];
         }
-        else if (GameObject.Find("Receiver 1(Clone)") != null) {
+        else if (gunHolder.transform.GetChild(0).name == ("Receiver 1(Clone)")) {
             gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[1];
         }
-        else if (GameObject.Find("Receiver 2(Clone)") != null) {
+        else if (gunHolder.transform.GetChild(0).name == ("Receiver 2(Clone)")) {
             gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[2];
         }
-        else if (GameObject.Find("Receiver 3(Clone)") != null) {
+        else if (gunHolder.transform.GetChild(0).name == ("Receiver 3(Clone)")) {
             gunHolder.GetComponent<GunHolderController>().gunSound = gunSounds[3];
         }
     }
 
     public void GenerateGun() {
 
-        if (GameObject.Find("Receiver(Clone)") != null) {
-            Destroy(GameObject.Find("Receiver(Clone)").gameObject);
-        }
-        else if (GameObject.Find("Receiver 1(Clone)") != null) {
-            Destroy(GameObject.Find("Receiver 1(Clone)"));
-        }
-        else if (GameObject.Find("Receiver 2(Clone)") != null) {
-            Destroy(GameObject.Find("Receiver 2(Clone)"));
-        }
-        else if (GameObject.Find("Receiver 3(Clone)") != null) {
-            Destroy(GameObject.Find("Receiver 3(Clone)"));
+        if (currentGun != null) { //Destroy current gun to make room for next one
+            Destroy(currentGun.gameObject);
         }
 
 		int receiverNmbr = Random.Range(4, 0);
@@ -116,7 +113,7 @@ public class GunGenerator : MonoBehaviour {
         switch (receiverNmbr) {
             case 1:
             gunNameText += "Heavy ";
-            chgAtt(0, 0, 10, -10, 10, 10);
+            chgAtt(0, 0, 10, -10, 10, 0);
             break;
             case 2:
             gunNameText += "Bolt-Action ";
@@ -124,7 +121,7 @@ public class GunGenerator : MonoBehaviour {
             break;
             case 3:
             gunNameText += "Automatic ";
-            chgAtt(0, 0, 20, 10, 5, 5);
+            chgAtt(0, 0, 20, 10, 5, 0);
             break;
             case 4:
             gunNameText += "Modern ";
@@ -180,7 +177,7 @@ public class GunGenerator : MonoBehaviour {
             if (randName1 == 2) {
                 gunNameText += "Military ";
             }
-            chgAtt(0, 0, 0, 0, 5, 20);
+            chgAtt(0, 0, 0, 0, 5, 10);
             break;
             case 2:
             if (randName1 == 2) {
@@ -192,7 +189,7 @@ public class GunGenerator : MonoBehaviour {
             if (randName1 == 2) {
                 gunNameText += "Sub-";
             }
-            chgAtt(-10, -10, 10, 20, -10, 30);
+            chgAtt(-10, -10, 10, 20, -10, 25);
             break;
             case 4:
             if (randName1 == 2) {
@@ -272,6 +269,9 @@ public class GunGenerator : MonoBehaviour {
         if (ammo < 5)
             ammo = 5;
 
+        int ammoRan = Random.Range(4, -4);
+        ammo += ammoRan;
+
         //SLIDERS
         accSlider.value = accuracy;
         ranSlider.value = range;
@@ -281,11 +281,7 @@ public class GunGenerator : MonoBehaviour {
         ammoText.text = ammo.ToString();
 
         gunName.text = gunNameText;
-        /*GameObject.Find("CameraRotator").GetComponent<CameraRotator>().startSpinning = false;
-        GameObject.Find("CameraRotator").GetComponent<CameraRotator>().counter = 0;
-        GameObject.Find("CameraRotator").transform.rotation = Quaternion.Euler(0, 50, 0);
-        */
-
+        
         //Copying current gun to show on UI
     }
 

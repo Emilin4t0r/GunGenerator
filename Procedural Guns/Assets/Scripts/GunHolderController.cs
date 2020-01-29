@@ -50,10 +50,10 @@ public class GunHolderController : MonoBehaviour
         currentAmmo = maxAmmo - ammoCounter;
         currentAmmoText.text = currentAmmo.ToString();
 
-        if (currentAmmo == 0 && transform.childCount > 0) {
+        if (currentAmmo == 0 && transform.childCount > 0 && !Input.GetKey(KeyCode.LeftShift)) {
             reloading = true;        
         }
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < maxAmmo) {            
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < maxAmmo && !Input.GetKey(KeyCode.LeftShift)) {            
             reloading = true;
         }
         if (reloading) {
@@ -81,7 +81,7 @@ public class GunHolderController : MonoBehaviour
 
         if (counter >= maxCounter) {
             if (gunGenerator.GetComponent<GunGenerator>().fullAuto == false) { //Semi-Auto
-                if (Input.GetKeyDown(KeyCode.Mouse0) && !reloading) {
+                if (Input.GetKeyDown(KeyCode.Mouse0) && !reloading && !Input.GetKey(KeyCode.LeftShift)) {
                     anim.SetBool("Shoot", true);
                     anim.SetTrigger("Shooty");
                     gunSound.Play();
@@ -92,7 +92,7 @@ public class GunHolderController : MonoBehaviour
                 }
             }
             if (gunGenerator.GetComponent<GunGenerator>().fullAuto == true) { //Full-Auto
-                if (Input.GetKey(KeyCode.Mouse0) && !reloading) {
+                if (Input.GetKey(KeyCode.Mouse0) && !reloading && !Input.GetKey(KeyCode.LeftShift)) {
                     anim.SetBool("Shoot", true);
                     anim.SetTrigger("Shooty");
                     gunSound.Play();
@@ -118,6 +118,12 @@ public class GunHolderController : MonoBehaviour
             else {
                 counter2 += Time.deltaTime;
             }
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift)) {
+            anim.SetBool("Running", true);
+        } else {
+            anim.SetBool("Running", false);
         }
 
         //CAMERA SHAKE
